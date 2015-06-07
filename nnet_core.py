@@ -70,9 +70,9 @@ def nnet_SGD(train_set, wts, bias, eta, backprop_fn=nnet_backpropagate, outp_len
         bias = [bt - learning_coef * (db + decay_rate * bt) for bt, db in zip(bias, sum_del_b)]
     return wts, bias
 
-def train_new(networkQuantity, networkKeepQuantity, networkEta,
+def nnet_train_new(networkQuantity, networkKeepQuantity, networkEta,
              networkDecayRate, firstLayer, secondLayer,
-             trainingEpochs, trainingSetSize, trainingBatchSize):
+             trainingEpochs, trainingSetSize, trainingBatchSize, testSetSize):
     networks = []
     _, test_set = load_data(trainingSetSize, trainingBatchSize)
     for i in range(0, networkQuantity):
@@ -81,7 +81,7 @@ def train_new(networkQuantity, networkKeepQuantity, networkEta,
 
         wts_maxA = wts; bias_maxA = bias; effectivenessA = nnet_evaluate_single(wts, bias, test_set)[2]
         for j in range(0, trainingEpochs):
-            train_set_split, test_set = load_data(trainingSetSize, trainingBatchSize)
+            train_set_split, test_set = load_data(trainingSetSize, trainingBatchSize, testSetSize)
             wts, bias = nnet_SGD(train_set_split, wts, bias, networkEta, decay_rate=networkDecayRate)
 
             new_effect = nnet_evaluate_single(wts, bias, test_set)[2]

@@ -44,10 +44,11 @@ def read_outp_vec(vec):
     if maxInd == 0: maxInd = len(vec)
     return maxInd - 1
 
-def load_data(split_point, batch_size):
+def load_data(split_point, batch_size, test_size = None):
     digits = load_digits()
     train_set, test_set = split_set(digits, split_point)
     train_set = split_to_batch(train_set, batch_size)
+    if not(test_size == None): test_set = test_set[0:test_size]
     return train_set, test_set
 
 ### ASSERT TESTING ###
@@ -74,6 +75,7 @@ assert(np.allclose(conv_to_col([[1, 2], [3, 4]]), [[4],[3],[2],[1]], 0))
 assert(conv_to_col(image_1).shape == (64, 1))
 
 assert(len(load_data(400, 5)[0]) == 80)
+assert(len(load_data(400, 5, 400)[1]) == 400)
 
 # Output reads correctly
 assert(read_outp_vec(create_tgt_vec(5)) == 5)

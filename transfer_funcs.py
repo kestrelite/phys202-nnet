@@ -2,22 +2,27 @@ import numpy as np
 
 # Sigmoid and cost function derivatives
 def sigmoid_transfer(x):
+    """Standard unscaled sigmoid function with range (0, 1)."""
     return 1.0/(1.0+np.exp(-x))
 sigmoid_transfer = np.vectorize(sigmoid_transfer)
 
 def sigmoid_transfer_deriv(x):
+    """Derivative of a standard sigmoid function."""
     return sigmoid_transfer(x)*(1-sigmoid_transfer(x))
 sigmoid_transfer_deriv = np.vectorize(sigmoid_transfer_deriv)
 
 def linear_transfer(x):
+    """Linear transfer function: f(x) = x"""
     return x;
 linear_transfer = np.vectorize(linear_transfer)
 
 def linear_transfer_deriv(x):
+    """Derivative of linear transfer: f'(x) = 1"""
     return 1;
 linear_transfer_deriv = np.vectorize(linear_transfer_deriv)
 
 def cost_MSE_deriv(outputs, cost):
+    """Derivative of the mean squared error cost function."""
     return outputs-cost
 cost_MSE_deriv = np.vectorize(cost_MSE_deriv)
 

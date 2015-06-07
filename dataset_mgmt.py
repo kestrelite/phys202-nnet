@@ -7,6 +7,7 @@ import random, math
 # Splits the data set into a randomized training and test set
 # with format [([image_matrix], exp_value), ([image_matrix], exp_value)...]
 def split_set(dataset, point):
+    """Takes a raw data set, and splits it at a specified point."""
     training_temp = list(zip(dataset.images[:point], dataset.target[:point]))
     test_temp = list(zip(dataset.images[point:], dataset.target[point:]))
     random.shuffle(training_temp)
@@ -18,26 +19,33 @@ def split_set(dataset, point):
 # Splits training data into batches with format
 # [[([image_mat], exp_value), ([image_mat], exp_value), ...], ...]
 def split_to_batch(trainset, size):
+    """Takes a data set and splits it into subsets of a given size."""
     return [trainset[n*size:(n+1)*size] for n in range(0, math.floor(len(trainset)/size))]
 
 # Converts an image matrix into a column vector
 def conv_to_col(vec, scale=1):
+    """Converts a 2D matrix (typically an image) into a 1D column vector"""
     vec = np.array(vec)
     assert(len(vec.shape) == 2)
     return np.rot90([vec.reshape((vec.shape[0] * vec.shape[1]))])/scale
 
 # Rotates a list into a numpy column vector
 def rotate_list(vec):
+    """Rotates a list into a numpy column vector"""
     return np.rot90([np.array(vec).reshape((len(vec)))])
 
 # Creates a target training vector 
 # [0, 0, 0, 0, 0, 0....] + e_pos (e being basis vector)
 def create_tgt_vec(pos, length=10):
+    """Creates a target column vector of the form [0, 0, ... 1, 0, ... 0]T 
+    
+    length -- the length of the column vector to be created"""
     tmp = np.zeros(length)
     tmp[pos] = 1
     return np.rot90([tmp])
 
 def read_outp_vec(vec):
+    """Reads a column vector for the index of its max"""
     maxInd = 0;
     for i in range(1, len(vec)+1):
         if vec[-i][0] > vec[-maxInd][0]: maxInd = i
@@ -45,6 +53,11 @@ def read_outp_vec(vec):
     return maxInd - 1
 
 def load_data(split_point, batch_size, test_size = None):
+    """Loads test data into working memory.
+    
+    split_point -- splits the data into a training and a test set
+    batch_size -- splits the training set into smaller batches of batch_size
+    test_size -- caps the test set size (primarily for speed)"""
     digits = load_digits()
     train_set, test_set = split_set(digits, split_point)
     train_set = split_to_batch(train_set, batch_size)

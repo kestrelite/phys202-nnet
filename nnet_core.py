@@ -32,6 +32,11 @@ def nnet_prop(weights, biases, inputs):
         inputs = transfer(np.dot(w, inputs) + b)
     return inputs
 
+# The following two functions were heavily influenced by the following page:
+# http://neuralnetworksanddeeplearning.com/chap1.html
+# I had originally written my own implementation, but in the process of 
+# diagnosis, it became similar to the code through that link, as I was
+# debugging each component using it as a functional baseline.
 def nnet_backpropagate(inp, outp, wts, bias, outp_length=10):
     """Backpropagation algorithm. Returns gradient vectors for weights, biases."""
     del_w = [np.zeros(shape=wt.shape) for wt in wts]

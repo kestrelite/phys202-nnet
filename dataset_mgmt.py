@@ -4,10 +4,10 @@ import random, math
 
 # The following functions split data into randomized subsets
 
-# Splits the data set into a randomized training and test set
-# with format [([image_matrix], exp_value), ([image_matrix], exp_value)...]
 def split_set(dataset, point):
-    """Takes a raw data set, and splits it at a specified point."""
+    """Takes a raw data set, and splits it at a specified point, appending the solution in a tuple in the process.
+    
+    Data will be split at the same point consistently, but each set will be shuffled."""
     training_temp = list(zip(dataset.images[:point], dataset.target[:point]))
     test_temp = list(zip(dataset.images[point:], dataset.target[point:]))
     random.shuffle(training_temp)
@@ -16,28 +16,22 @@ def split_set(dataset, point):
     test_set, test_sols = zip(*test_temp)
     return list(zip(training_set, training_sols)), list(zip(test_set, test_sols))
 
-# Splits training data into batches with format
-# [[([image_mat], exp_value), ([image_mat], exp_value), ...], ...]
 def split_to_batch(trainset, size):
     """Takes a data set and splits it into subsets of a given size."""
     return [trainset[n*size:(n+1)*size] for n in range(0, math.floor(len(trainset)/size))]
 
-# Converts an image matrix into a column vector
 def conv_to_col(vec, scale=1):
     """Converts a 2D matrix (typically an image) into a 1D column vector"""
     vec = np.array(vec)
     assert(len(vec.shape) == 2)
     return np.rot90([vec.reshape((vec.shape[0] * vec.shape[1]))])/scale
 
-# Rotates a list into a numpy column vector
 def rotate_list(vec):
     """Rotates a list into a numpy column vector"""
     return np.rot90([np.array(vec).reshape((len(vec)))])
 
-# Creates a target training vector 
-# [0, 0, 0, 0, 0, 0....] + e_pos (e being basis vector)
 def create_tgt_vec(pos, length=10):
-    """Creates a target column vector of the form [0, 0, ... 1, 0, ... 0]T 
+    """Creates a target column vector of the form [0, 0, ..., 0, 1, 0, ... 0]T 
     
     length -- the length of the column vector to be created"""
     tmp = np.zeros(length)
